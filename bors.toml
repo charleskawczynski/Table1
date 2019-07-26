@@ -1,0 +1,3 @@
+delete_merged_branches = true
+timeout_sec = 14400
+block_labels = [ "do-not-merge-yet" ]

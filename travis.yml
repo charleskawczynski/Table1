@@ -1,0 +1,35 @@
+## Documentation: http://docs.travis-ci.com/user/languages/julia/
+language: julia
+sudo: false
+dist: trusty
+os:
+  - linux
+  - osx
+julia:
+  - 1.1
+  - nightly
+notifications:
+  email: false
+
+# comment the following lines to disallow failures on nightly julia
+matrix:
+  allow_failures:
+  - julia: nightly
+
+branches:
+  only:
+    - master
+    - staging
+    - trying
+
+before_script:
+  - |
+    if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
+      brew update
+      brew upgrade cmake
+      brew cask uninstall oclint # Prevent conflict with gcc
+      brew install mpich
+    fi
+
+after_success:
+  - julia -e 'import Pkg; cd(Pkg.dir("Table1")); Pkg.add("Coverage"); using Coverage; Codecov.submit(Codecov.process_folder())'
